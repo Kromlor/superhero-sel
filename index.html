@@ -3,16 +3,54 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Hero Within - Middle School SEL Superhero Studio</title>
-  
-  <!-- Tailwind CSS CDN -->
-  <script src="https://cdn.tailwindcss.com"></script>
-  
-  <!-- React & ReactDOM CDNs -->
-  <script src="https://unpkg.com/react@18/umd/react.production.min.js" crossorigin></script>
-  <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js" crossorigin></script>
-
+  <title>Hero Within - Middle School SEL Studio</title>
   <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+    body { background-color: #020617; color: #f8fafc; min-height: 100vh; padding-bottom: 2rem; }
+    header { background-color: #0f172a; border-bottom: 1px solid #1e293b; padding: 1rem; position: sticky; top: 0; z-index: 50; }
+    .header-inner { max-width: 56rem; margin: 0 auto; display: flex; justify-content: space-between; items-center: center; }
+    .logo { font-size: 1.25rem; font-weight: 900; color: #60a5fa; text-transform: uppercase; letter-spacing: 0.05em; display: flex; align-items: center; gap: 0.5rem; }
+    .subtag { font-size: 0.75rem; color: #94a3b8; font-weight: normal; }
+    .stepper { display: flex; gap: 0.5rem; }
+    .step-dot { width: 1.75rem; height: 1.75rem; rounded-radius: 50%; border-radius: 9999px; display: flex; align-items: center; justify-content: center; font-size: 0.75rem; font-weight: bold; background-color: #1e293b; color: #64748b; }
+    .step-dot.active { background-color: #2563eb; color: #ffffff; ring: 2px solid #60a5fa; }
+    .step-dot.done { background-color: #334155; color: #34d399; }
+    
+    main { max-width: 56rem; margin: 2rem auto 0; padding: 0 1rem; }
+    .card-panel { background-color: rgba(15, 23, 42, 0.6); border: 1px solid #1e293b; border-radius: 1rem; padding: 1.5rem; margin-bottom: 1.5rem; }
+    h2 { font-size: 1.5rem; font-weight: 900; color: #ffffff; margin-bottom: 0.25rem; }
+    p.desc { font-size: 0.875rem; color: #94a3b8; margin-bottom: 1.25rem; }
+    
+    label { display: block; font-size: 0.75rem; font-weight: bold; text-transform: uppercase; color: #cbd5e1; margin-bottom: 0.5rem; }
+    input[type="text"], textarea { width: 100%; background-color: #020617; border: 1px solid #334155; border-radius: 0.5rem; padding: 0.75rem; color: #ffffff; font-size: 0.875rem; outline: none; margin-bottom: 1rem; }
+    input[type="text"]:focus, textarea:focus { border-color: #2563eb; }
+    
+    .grid-2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 0.75rem; margin-bottom: 1rem; }
+    .selectable-tile { background-color: rgba(30, 41, 59, 0.8); border: 1px solid #334155; border-radius: 0.5rem; padding: 0.875rem; cursor: pointer; transition: all 0.2s; }
+    .selectable-tile:hover { border-color: #475569; }
+    .selectable-tile.selected { background-color: rgba(6, 78, 59, 0.6); border-color: #10b981; color: #ffffff; }
+    .selectable-tile.arch-selected { background-color: rgba(30, 58, 138, 0.4); border-color: #3b82f6; }
+    .tile-title { font-weight: bold; font-size: 0.875rem; margin-bottom: 0.25rem; }
+    .tile-desc { font-size: 0.75rem; color: #94a3b8; }
+    
+    .btn { width: 100%; padding: 0.875rem; font-weight: bold; border-radius: 0.5rem; border: none; cursor: pointer; font-size: 0.875rem; transition: background 0.2s; }
+    .btn-primary { background-color: #2563eb; color: #ffffff; }
+    .btn-primary:hover { background-color: #1d4ed8; }
+    .btn-disabled { background-color: #1e293b; color: #475569; cursor: not-allowed; }
+    .btn-secondary { background-color: #1e293b; color: #cbd5e1; width: 30%; }
+    .btn-row { display: flex; gap: 0.75rem; margin-top: 1rem; }
+
+    /* Avatar Studio Display */
+    .avatar-preview { background-color: #020617; border: 1px solid #1e293b; border-radius: 0.75rem; padding: 2rem; display: flex; flex-direction: column; align-items: center; justify-content: center; position: relative; min-height: 280px; }
+    .avatar-shield { width: 9rem; height: 9rem; border-radius: 1rem; display: flex; align-items: center; justify-content: center; font-size: 4rem; border: 4px solid #1e293b; box-shadow: 0 20px 25px -5px rgba(0,0,0,0.5); }
+    .color-swatch { width: 2rem; height: 2rem; border-radius: 50%; border: 2px solid transparent; cursor: pointer; }
+    .color-swatch.active { border-color: #ffffff; transform: scale(1.1); }
+    
+    /* Printable Card */
+    .trading-card { max-width: 26rem; margin: 0 auto; background-color: #0f172a; border: 2px solid #334155; border-radius: 1rem; padding: 1.5rem; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25); }
+    .card-header { display: flex; align-items: center; gap: 1rem; border-bottom: 1px solid #1e293b; padding-bottom: 1rem; margin-bottom: 1rem; }
+    .power-box { background-color: rgba(2, 6, 23, 0.8); border: 1px solid #1e293b; border-radius: 0.5rem; padding: 0.75rem; margin-bottom: 0.75rem; }
+    
     @media print {
       body * { visibility: hidden; }
       #printable-card, #printable-card * { visibility: visible; }
@@ -20,225 +58,88 @@
     }
   </style>
 </head>
-<body class="bg-slate-950 text-slate-100 font-sans min-h-screen">
+<body>
 
-  <div id="root"></div>
+  <header>
+    <div class="header-inner">
+      <div class="logo">
+        🦸‍♂️ Hero Within <span class="subtag">| SEL 11 (SA-2)</span>
+      </div>
+      <div class="stepper">
+        <div id="dot-1" class="step-dot active">1</div>
+        <div id="dot-2" class="step-dot">2</div>
+        <div id="dot-3" class="step-dot">3</div>
+        <div id="dot-4" class="step-dot">4</div>
+      </div>
+    </div>
+  </header>
+
+  <main id="app-content"></main>
 
   <script>
-    const { useState, createElement: h } = React;
+    // App State
+    let state = {
+      step: 1,
+      heroAlias: '',
+      archetype: 'The Protector',
+      selectedStrengths: [],
+      emblem: '⚡',
+      primaryColor: '#3B82F6',
+      powers: [
+        { strength: '', powerName: '', reflection: '' },
+        { strength: '', powerName: '', reflection: '' },
+        { strength: '', powerName: '', reflection: '' }
+      ]
+    };
 
     const SEL_STRENGTHS = [
-      { id: 'resilience', name: 'Resilience / Grit', desc: 'Bouncing back after failure or tough challenges.' },
-      { id: 'empathy', name: 'Empathy & Listening', desc: 'Understanding and supporting how others feel.' },
-      { id: 'integrity', name: 'Integrity / Courage', desc: 'Doing the right thing even when no one is watching.' },
-      { id: 'curiosity', name: 'Curiosity / Problem Solving', desc: 'Loving to learn, ask questions, and solve puzzles.' },
-      { id: 'teamwork', name: 'Teamwork & Collaboration', desc: 'Working smoothly with others to achieve a goal.' },
-      { id: 'calmness', name: 'Self-Regulation / Calm', desc: 'Staying cool and focused under pressure.' },
-      { id: 'leadership', name: 'Positive Leadership', desc: 'Inspiring and guiding peers in a good direction.' },
-      { id: 'kindness', name: 'Inclusion & Kindness', desc: 'Making sure everyone feels welcomed and valued.' }
+      { name: 'Resilience / Grit', desc: 'Bouncing back after failure or tough challenges.' },
+      { name: 'Empathy & Listening', desc: 'Understanding and supporting how others feel.' },
+      { name: 'Integrity / Courage', desc: 'Doing the right thing even when no one is watching.' },
+      { name: 'Curiosity / Problem Solving', desc: 'Loving to learn, ask questions, and solve puzzles.' },
+      { name: 'Teamwork & Collaboration', desc: 'Working smoothly with others to achieve a goal.' },
+      { name: 'Self-Regulation / Calm', desc: 'Staying cool and focused under pressure.' },
+      { name: 'Positive Leadership', desc: 'Inspiring and guiding peers in a good direction.' },
+      { name: 'Inclusion & Kindness', desc: 'Making sure everyone feels welcomed and valued.' }
     ];
 
     const ARCHETYPES = [
-      { id: 'The Protector', title: 'The Protector', desc: 'Defends others and stands up for fairness.' },
-      { id: 'The Strategist', title: 'The Strategist', desc: 'Mastermind problem-solver who plans ahead.' },
-      { id: 'The Catalyst', title: 'The Catalyst', desc: 'Brings positive energy and sparks team action.' },
-      { id: 'The Trailblazer', title: 'The Trailblazer', desc: 'Pioneers new ideas and stays true to self.' }
+      { id: 'The Protector', desc: 'Defends others and stands up for fairness.' },
+      { id: 'The Strategist', desc: 'Mastermind problem-solver who plans ahead.' },
+      { id: 'The Catalyst', desc: 'Brings positive energy and sparks team action.' },
+      { id: 'The Trailblazer', desc: 'Pioneers new ideas and stays true to self.' }
     ];
 
-    const AVATAR_OPTIONS = {
-      emblems: ['⚡', '🛡️', '💎', '🔥', '👁️', '🌟', '📚', '🧩'],
-      colors: ['#3B82F6', '#10B981', '#8B5CF6', '#F59E0B', '#EF4444', '#EC4899']
-    };
+    const EMBLEMS = ['⚡', '🛡️', '💎', '🔥', '👁️', '🌟', '📚', '🧩'];
+    const COLORS = ['#3B82F6', '#10B981', '#8B5CF6', '#F59E0B', '#EF4444', '#EC4899'];
 
-    function App() {
-      const [step, setStep] = useState(1);
-      const [heroData, setHeroData] = useState({
-        heroAlias: '',
-        archetype: ARCHETYPES[0].id,
-        selectedStrengths: [],
-        avatarConfig: { emblem: '⚡', primaryColor: '#3B82F6' },
-        powers: [
-          { strength: '', powerName: '', reflection: '' },
-          { strength: '', powerName: '', reflection: '' },
-          { strength: '', powerName: '', reflection: '' }
-        ]
-      });
+    function render() {
+      const main = document.getElementById('app-content');
+      updateDots();
 
-      const nextStep = () => setStep((prev) => Math.min(prev + 1, 4));
-      const prevStep = () => setStep((prev) => Math.max(prev - 1, 1));
-
-      return h('div', { className: 'pb-12' },
-        h('header', { className: 'border-b border-slate-800 bg-slate-900/90 sticky top-0 z-50 p-4' },
-          h('div', { className: 'max-w-4xl mx-auto flex items-center justify-between' },
-            h('div', { className: 'flex items-center space-x-2' },
-              h('span', { className: 'text-2xl' }, '🦸‍♂️'),
-              h('h1', { className: 'text-xl font-black bg-gradient-to-r from-blue-400 to-indigo-400 bg-clip-text text-transparent uppercase tracking-wider' },
-                'Hero Within ',
-                h('span', { className: 'text-xs text-slate-400 font-normal' }, '| SEL 11 (SA-2)')
-              )
-            ),
-            h('div', { className: 'flex items-center space-x-2 text-xs font-semibold' },
-              [1, 2, 3, 4].map((i) =>
-                h('div', {
-                  key: i,
-                  className: `w-7 h-7 rounded-full flex items-center justify-center ${
-                    step === i ? 'bg-blue-600 text-white font-bold ring-2 ring-blue-400' :
-                    step > i ? 'bg-slate-700 text-emerald-400' : 'bg-slate-800 text-slate-500'
-                  }`
-                }, step > i ? '✓' : i)
-              )
-            )
-          )
-        ),
-        h('main', { className: 'max-w-4xl mx-auto mt-8 px-4' },
-          step === 1 && h(Step1StrengthsSelect, { heroData, setHeroData, onNext: nextStep }),
-          step === 2 && h(Step2AvatarStudio, { heroData, setHeroData, onNext: nextStep, onBack: prevStep }),
-          step === 3 && h(Step3Dossier, { heroData, setHeroData, onNext: nextStep, onBack: prevStep }),
-          step === 4 && h(Step4HeroCardPreview, { heroData, onBack: prevStep })
-        )
-      );
+      if (state.step === 1) renderStep1(main);
+      else if (state.step === 2) renderStep2(main);
+      else if (state.step === 3) renderStep3(main);
+      else if (state.step === 4) renderStep4(main);
     }
 
-    function Step1StrengthsSelect({ heroData, setHeroData, onNext }) {
-      const toggleStrength = (strName) => {
-        let current = [...heroData.selectedStrengths];
-        if (current.includes(strName)) {
-          current = current.filter((s) => s !== strName);
-        } else {
-          if (current.length >= 3) return;
-          current.push(strName);
-        }
-        const updatedPowers = current.map((str, idx) => ({
-          strength: str,
-          powerName: heroData.powers[idx]?.powerName || '',
-          reflection: heroData.powers[idx]?.reflection || ''
-        }));
-        setHeroData({ ...heroData, selectedStrengths: current, powers: updatedPowers });
-      };
-
-      const isValid = heroData.heroAlias.trim() && heroData.selectedStrengths.length === 3;
-
-      return h('div', { className: 'space-y-6 bg-slate-900/60 p-6 rounded-2xl border border-slate-800' },
-        h('div', null,
-          h('h2', { className: 'text-2xl font-black text-white' }, '1. Hero Identity & Core Strengths'),
-          h('p', { className: 'text-sm text-slate-400 mt-1' }, 'Give your hero an alias name and select your top 3 strengths.')
-        ),
-        h('div', { className: 'space-y-2' },
-          h('label', { className: 'block text-xs uppercase font-bold text-slate-300' }, 'Superhero Alias Name'),
-          h('input', {
-            type: 'text',
-            placeholder: 'e.g., The Mind Fortress, Apex Listener',
-            value: heroData.heroAlias,
-            onChange: (e) => setHeroData({ ...heroData, heroAlias: e.target.value }),
-            className: 'w-full bg-slate-900 border border-slate-700 rounded-lg p-3 text-white font-semibold focus:outline-none focus:border-blue-500'
-          })
-        ),
-        h('div', { className: 'space-y-2' },
-          h('label', { className: 'block text-xs uppercase font-bold text-slate-300' }, 'Select Archetype'),
-          h('div', { className: 'grid grid-cols-1 md:grid-cols-2 gap-3' },
-            ARCHETYPES.map((arch) =>
-              h('div', {
-                key: arch.id,
-                onClick: () => setHeroData({ ...heroData, archetype: arch.id }),
-                className: `p-3 rounded-lg border cursor-pointer ${
-                  heroData.archetype === arch.id ? 'bg-blue-900/40 border-blue-500 ring-1 ring-blue-400' : 'bg-slate-800/60 border-slate-700'
-                }`
-              },
-                h('div', { className: 'font-bold text-sm text-white' }, arch.title),
-                h('div', { className: 'text-xs text-slate-400' }, arch.desc)
-              )
-            )
-          )
-        ),
-        h('div', { className: 'space-y-2' },
-          h('label', { className: 'block text-xs uppercase font-bold text-slate-300' }, `Select Top 3 Strengths (${heroData.selectedStrengths.length}/3)`),
-          h('div', { className: 'grid grid-cols-1 md:grid-cols-2 gap-3' },
-            SEL_STRENGTHS.map((str) => {
-              const selected = heroData.selectedStrengths.includes(str.name);
-              return h('div', {
-                key: str.id,
-                onClick: () => toggleStrength(str.name),
-                className: `p-3 rounded-lg border cursor-pointer flex items-start space-x-3 ${
-                  selected ? 'bg-emerald-950/60 border-emerald-500 text-white' :
-                  heroData.selectedStrengths.length >= 3 ? 'bg-slate-900/40 border-slate-800 text-slate-600' : 'bg-slate-800/80 border-slate-700'
-                }`
-              },
-                h('div', { className: `w-5 h-5 rounded border mt-0.5 flex items-center justify-center text-xs font-bold ${selected ? 'bg-emerald-500 text-slate-950' : 'border-slate-600'}` }, selected ? '✓' : ''),
-                h('div', null,
-                  h('div', { className: 'font-bold text-sm' }, str.name),
-                  h('div', { className: 'text-xs text-slate-400' }, str.desc)
-                )
-              );
-            })
-          )
-        ),
-        h('button', {
-          disabled: !isValid,
-          onClick: onNext,
-          className: `w-full py-3.5 font-bold rounded-lg ${isValid ? 'bg-blue-600 hover:bg-blue-500 text-white cursor-pointer' : 'bg-slate-800 text-slate-600 cursor-not-allowed'}`
-        }, 'Proceed to Avatar Studio →')
-      );
+    function updateDots() {
+      for (let i = 1; i <= 4; i++) {
+        const dot = document.getElementById(`dot-${i}`);
+        if (i === state.step) { dot.className = 'step-dot active'; dot.innerText = i; }
+        else if (i < state.step) { dot.className = 'step-dot done'; dot.innerText = '✓'; }
+        else { dot.className = 'step-dot'; dot.innerText = i; }
+      }
     }
 
-    function Step2AvatarStudio({ heroData, setHeroData, onNext, onBack }) {
-      const config = heroData.avatarConfig;
-      const updateConfig = (k, v) => setHeroData({ ...heroData, avatarConfig: { ...config, [k]: v } });
-
-      return h('div', { className: 'grid grid-cols-1 md:grid-cols-2 gap-6 bg-slate-900/60 p-6 rounded-2xl border border-slate-800' },
-        h('div', { className: 'bg-slate-950 rounded-xl p-6 border border-slate-800 flex flex-col items-center justify-center relative overflow-hidden min-h-[300px]' },
-          h('div', { className: 'absolute w-48 h-48 rounded-full filter blur-3xl opacity-30', style: { backgroundColor: config.primaryColor } }),
-          h('div', { className: 'relative z-10 flex flex-col items-center' },
-            h('div', { className: 'w-36 h-36 rounded-2xl flex items-center justify-center border-4 border-slate-800 text-6xl shadow-2xl', style: { backgroundColor: config.primaryColor } }, config.emblem),
-            h('span', { className: 'mt-4 text-xs font-mono text-blue-400 font-bold uppercase' }, heroData.heroAlias || 'Unnamed Hero'),
-            h('span', { className: 'text-xs text-slate-400 font-semibold' }, heroData.archetype)
-          )
-        ),
-        h('div', { className: 'space-y-5 flex flex-col justify-between' },
-          h('div', { className: 'space-y-4' },
-            h('h2', { className: 'text-xl font-black text-white' }, '2. Visual Avatar Studio'),
-            h('div', null,
-              h('label', { className: 'block text-xs font-bold uppercase text-slate-400 mb-2' }, 'Hero Emblem Symbol'),
-              h('div', { className: 'flex flex-wrap gap-2' },
-                AVATAR_OPTIONS.emblems.map((sym) =>
-                  h('button', {
-                    key: sym,
-                    onClick: () => updateConfig('emblem', sym),
-                    className: `w-10 h-10 text-xl rounded-lg border ${config.emblem === sym ? 'bg-blue-600 border-blue-400' : 'bg-slate-800 border-slate-700'}`
-                  }, sym)
-                )
-              )
-            ),
-            h('div', null,
-              h('label', { className: 'block text-xs font-bold uppercase text-slate-400 mb-2' }, 'Aura / Power Energy Color'),
-              h('div', { className: 'flex space-x-2' },
-                AVATAR_OPTIONS.colors.map((c) =>
-                  h('button', {
-                    key: c,
-                    onClick: () => updateConfig('primaryColor', c),
-                    className: `w-8 h-8 rounded-full border-2 ${config.primaryColor === c ? 'border-white scale-110' : 'border-transparent'}`,
-                    style: { backgroundColor: c }
-                  })
-                )
-              )
-            )
-          ),
-          h('div', { className: 'flex space-x-3 pt-4' },
-            h('button', { onClick: onBack, className: 'w-1/3 py-3 bg-slate-800 text-slate-300 font-bold rounded-lg text-sm' }, '← Back'),
-            h('button', { onClick: onNext, className: 'w-2/3 py-3 bg-blue-600 text-white font-bold rounded-lg text-sm' }, 'Power Dossier →')
-          )
-        )
-      );
-    }
-
-    function Step3Dossier({ heroData, setHeroData, onNext, onBack }) {
-      const updatePower = (idx, field, val) => {
-        const updated = [...heroData.powers];
-        updated[idx][field] = val;
-        setHeroData({ ...heroData, powers: updated });
-      };
-
-      const isComplete = heroData.powers.every((p) => p.powerName.trim().length > 0 && p.reflection.trim().length >= 8);
-
-      return h('div', { className: 'space-y-6 bg-slate-900/60 p-6 rounded-2xl border border-slate-800' },
-        h('div', null,
-          h('h2', { className: 'text-2xl font-black text-white'
+    // STEP 1: STRENGTHS
+    function renderStep1(container) {
+      const isValid = state.heroAlias.trim().length > 0 && state.selectedStrengths.length === 3;
+      
+      container.innerHTML = `
+        <div class="card-panel">
+          <h2>1. Hero Identity & Core Strengths</h2>
+          <p class="desc">Give your hero an alias name and select your top 3 strengths.</p>
+          
+          <label>Superhero Alias Name</label>
+          <input type="text" id="heroAliasInput" placeholder="e.g., The Mind Fortress, Apex Listener" value="${state.
