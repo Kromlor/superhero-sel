@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Hero Within - Middle School SEL Superhero Studio</title>
+  
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <!-- React & ReactDOM CDNs -->
+  <script src="https://unpkg.com/react@18/umd/react.production.min.js" crossorigin></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js" crossorigin></script>
+  
+  <!-- Babel Standalone (Allows React JSX directly in HTML) -->
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  
+  <style>
+    @media print {
+      body * { visibility: hidden; }
+      #printable-card, #printable-card * { visibility: visible; }
+      #printable-card { position: absolute; left: 0; top: 0; width: 100%; }
+    }
+  </style>
+</head>
+<body class="bg-slate-950 text-slate-100 font-sans min-h-screen">
+
+  <!-- React Mount Root -->
+  <div id="root"></div>
+
+  <!-- React Application Logic -->
+  <script type="text/babel">
+    const { useState } = React;
+
+    const SEL_STRENGTHS = [
+      { id: 'resilience', name: 'Resilience / Grit', desc: 'Bouncing back after failure or tough challenges.' },
+      { id: 'empathy', name: 'Empathy & Listening', desc: 'Understanding and supporting how others feel.' },
+      { id: 'integrity', name: 'Integrity / Courage', desc: 'Doing the right thing even when no one is watching.' },
+      { id: 'curiosity', name: 'Curiosity / Problem Solving', desc: 'Loving to learn, ask questions, and solve puzzles.' },
+      { id: 'teamwork', name: 'Teamwork & Collaboration', desc: 'Working smoothly with others to achieve a goal.' },
+      { id: 'calmness', name: 'Self-Regulation / Calm', desc: 'Staying cool and focused under pressure.' },
+      { id: 'leadership', name: 'Positive Leadership', desc: 'Inspiring and guiding peers in a good direction.' },
+      { id: 'kindness', name: 'Inclusion & Kindness', desc: 'Making sure everyone feels welcomed and valued.' }
+    ];
+
+    const ARCHETYPES = [
+      { id: 'The Protector', title: 'The Protector', desc: 'Defends others and stands up for fairness.' },
+      { id: 'The Strategist', title: 'The Strategist', desc: 'Mastermind problem-solver who plans ahead.' },
+      { id: 'The Catalyst', title: 'The Catalyst', desc: 'Brings positive energy and sparks team action.' },
+      { id: 'The Trailblazer', title: 'The Trailblazer', desc: 'Pioneers new ideas and stays true to self.' }
+    ];
+
+    const AVATAR_OPTIONS = {
+      outfits: [
+        { id: 'streetwear', label: 'Tech Hoodie' },
+        { id: 'armored', label: 'Cyber Armor' },
+        { id: 'tactical', label: 'Hero Vest' },
+        { id: 'casual', label: 'Graphic Tee' }
+      ],
+      emblems: ['⚡', '🛡️', '💎', '🔥', '👁️', '🌟', '📚', '🧩'],
+      colors: ['#3B82F6', '#10B981', '#8B5CF6', '#F59E0B', '#EF4444', '#EC4899']
+    };
+
+    function App() {
+      const [step, setStep] = useState(1);
+      const [heroData, setHeroData] = useState({
+        heroAlias: '',
+        archetype: ARCHETYPES[0].id,
+        selectedStrengths: [],
+        avatarConfig: {
+          outfit: 'streetwear',
+          emblem: '⚡',
+          primaryColor: '#3B82F6'
+        },
+        powers: [
+          { strength: '', powerName: '', reflection: '' },
+          { strength: '', powerName: '', reflection: '' },
+          { strength: '', powerName: '', reflection: '' }
+        ]
+      });
+
+      const nextStep = () => setStep((prev) => Math.min(prev + 1, 4));
+      const prevStep = () => setStep((prev) => Math.max(prev - 1, 1));
+
+      return (
+        <div className="pb-12">
+          {/* Header */}
+          <header className="border-b border-slate-800 bg-slate-900/90 backdrop-blur sticky top-0 z-50 p-4">
+            <div className="max-w-4xl mx-auto flex items-center justify-between">
+              <div className="flex items-center space-x-2">
+                <span className="text-2xl">🦸‍♂️</span>
+                <h1 className="text-xl font-black bg-gradient-to-r from-blue-400 to-indigo-400 bg-clip-text text-transparent uppercase tracking-wider">
+                  Hero Within <span className="text-xs text-slate-400 font-normal">| SEL 11 (SA-2)</span>
+                </h1>
+              </div>
+              <div className="flex items-center space-x-2 text-xs font-semibold">
+                {[1, 2, 3, 4].map((i) => (
+                  <div
+                    key={i
