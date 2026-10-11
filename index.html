@@ -8,16 +8,16 @@
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
     body { background-color: #020617; color: #f8fafc; min-height: 100vh; padding-bottom: 2rem; }
     header { background-color: #0f172a; border-bottom: 1px solid #1e293b; padding: 1rem; position: sticky; top: 0; z-index: 50; }
-    .header-inner { max-width: 56rem; margin: 0 auto; display: flex; justify-content: space-between; items-center: center; }
+    .header-inner { max-width: 56rem; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; }
     .logo { font-size: 1.25rem; font-weight: 900; color: #60a5fa; text-transform: uppercase; letter-spacing: 0.05em; display: flex; align-items: center; gap: 0.5rem; }
     .subtag { font-size: 0.75rem; color: #94a3b8; font-weight: normal; }
     .stepper { display: flex; gap: 0.5rem; }
-    .step-dot { width: 1.75rem; height: 1.75rem; rounded-radius: 50%; border-radius: 9999px; display: flex; align-items: center; justify-content: center; font-size: 0.75rem; font-weight: bold; background-color: #1e293b; color: #64748b; }
+    .step-dot { width: 1.75rem; height: 1.75rem; border-radius: 9999px; display: flex; align-items: center; justify-content: center; font-size: 0.75rem; font-weight: bold; background-color: #1e293b; color: #64748b; }
     .step-dot.active { background-color: #2563eb; color: #ffffff; ring: 2px solid #60a5fa; }
     .step-dot.done { background-color: #334155; color: #34d399; }
     
-    main { max-width: 56rem; margin: 2rem auto 0; padding: 0 1rem; }
-    .card-panel { background-color: rgba(15, 23, 42, 0.6); border: 1px solid #1e293b; border-radius: 1rem; padding: 1.5rem; margin-bottom: 1.5rem; }
+    main { max-width: 56rem; margin: 2rem auto 0; padding: 0 1rem; display: block; }
+    .card-panel { background-color: rgba(15, 23, 42, 0.9); border: 1px solid #1e293b; border-radius: 1rem; padding: 1.5rem; margin-bottom: 1.5rem; }
     h2 { font-size: 1.5rem; font-weight: 900; color: #ffffff; margin-bottom: 0.25rem; }
     p.desc { font-size: 0.875rem; color: #94a3b8; margin-bottom: 1.25rem; }
     
@@ -78,7 +78,7 @@
 
   <script>
     // App State
-    let state = {
+    var state = {
       step: 1,
       heroAlias: '',
       archetype: 'The Protector',
@@ -92,7 +92,7 @@
       ]
     };
 
-    const SEL_STRENGTHS = [
+    var SEL_STRENGTHS = [
       { name: 'Resilience / Grit', desc: 'Bouncing back after failure or tough challenges.' },
       { name: 'Empathy & Listening', desc: 'Understanding and supporting how others feel.' },
       { name: 'Integrity / Courage', desc: 'Doing the right thing even when no one is watching.' },
@@ -103,18 +103,20 @@
       { name: 'Inclusion & Kindness', desc: 'Making sure everyone feels welcomed and valued.' }
     ];
 
-    const ARCHETYPES = [
+    var ARCHETYPES = [
       { id: 'The Protector', desc: 'Defends others and stands up for fairness.' },
       { id: 'The Strategist', desc: 'Mastermind problem-solver who plans ahead.' },
       { id: 'The Catalyst', desc: 'Brings positive energy and sparks team action.' },
       { id: 'The Trailblazer', desc: 'Pioneers new ideas and stays true to self.' }
     ];
 
-    const EMBLEMS = ['⚡', '🛡️', '💎', '🔥', '👁️', '🌟', '📚', '🧩'];
-    const COLORS = ['#3B82F6', '#10B981', '#8B5CF6', '#F59E0B', '#EF4444', '#EC4899'];
+    var EMBLEMS = ['⚡', '🛡️', '💎', '🔥', '👁️', '🌟', '📚', '🧩'];
+    var COLORS = ['#3B82F6', '#10B981', '#8B5CF6', '#F59E0B', '#EF4444', '#EC4899'];
 
     function render() {
-      const main = document.getElementById('app-content');
+      var main = document.getElementById('app-content');
+      if (!main) return;
+      
       updateDots();
 
       if (state.step === 1) renderStep1(main);
@@ -124,22 +126,220 @@
     }
 
     function updateDots() {
-      for (let i = 1; i <= 4; i++) {
-        const dot = document.getElementById(`dot-${i}`);
-        if (i === state.step) { dot.className = 'step-dot active'; dot.innerText = i; }
-        else if (i < state.step) { dot.className = 'step-dot done'; dot.innerText = '✓'; }
-        else { dot.className = 'step-dot'; dot.innerText = i; }
+      for (var i = 1; i <= 4; i++) {
+        var dot = document.getElementById('dot-' + i);
+        if (dot) {
+          if (i === state.step) { dot.className = 'step-dot active'; dot.innerText = i; }
+          else if (i < state.step) { dot.className = 'step-dot done'; dot.innerText = '✓'; }
+          else { dot.className = 'step-dot'; dot.innerText = i; }
+        }
       }
     }
 
     // STEP 1: STRENGTHS
     function renderStep1(container) {
-      const isValid = state.heroAlias.trim().length > 0 && state.selectedStrengths.length === 3;
+      var isValid = state.heroAlias.trim().length > 0 && state.selectedStrengths.length === 3;
       
-      container.innerHTML = `
-        <div class="card-panel">
-          <h2>1. Hero Identity & Core Strengths</h2>
-          <p class="desc">Give your hero an alias name and select your top 3 strengths.</p>
+      var archHTML = ARCHETYPES.map(function(a) {
+        return '<div class="selectable-tile ' + (state.archetype === a.id ? 'arch-selected' : '') + '" onclick="selectArchetype(\'' + a.id + '\')">' +
+          '<div class="tile-title">' + a.id + '</div>' +
+          '<div class="tile-desc">' + a.desc + '</div>' +
+        '</div>';
+      }).join('');
+
+      var strHTML = SEL_STRENGTHS.map(function(s) {
+        var isSel = state.selectedStrengths.indexOf(s.name) !== -1;
+        return '<div class="selectable-tile ' + (isSel ? 'selected' : '') + '" onclick="toggleStrength(\'' + s.name + '\')">' +
+          '<div class="tile-title">' + (isSel ? '✓ ' : '') + s.name + '</div>' +
+          '<div class="tile-desc">' + s.desc + '</div>' +
+        '</div>';
+      }).join('');
+
+      container.innerHTML = 
+        '<div class="card-panel">' +
+          '<h2>1. Hero Identity & Core Strengths</h2>' +
+          '<p class="desc">Give your hero an alias name and select your top 3 strengths.</p>' +
           
-          <label>Superhero Alias Name</label>
-          <input type="text" id="heroAliasInput" placeholder="e.g., The Mind Fortress, Apex Listener" value="${state.
+          '<label>Superhero Alias Name</label>' +
+          '<input type="text" id="heroAliasInput" placeholder="e.g., The Mind Fortress, Apex Listener" value="' + state.heroAlias + '">' +
+
+          '<label>Select Archetype</label>' +
+          '<div class="grid-2">' + archHTML + '</div>' +
+
+          '<label>Select Top 3 Strengths (' + state.selectedStrengths.length + '/3)</label>' +
+          '<div class="grid-2">' + strHTML + '</div>' +
+
+          '<button class="btn ' + (isValid ? 'btn-primary' : 'btn-disabled') + '" ' + (isValid ? 'onclick="nextStep()"' : 'disabled') + '>' +
+            'Proceed to Avatar Studio →' +
+          '</button>' +
+        '</div>';
+
+      var input = document.getElementById('heroAliasInput');
+      if (input) {
+        input.addEventListener('input', function(e) {
+          state.heroAlias = e.target.value;
+          render();
+        });
+      }
+    }
+
+    function selectArchetype(arch) { state.archetype = arch; render(); }
+    
+    function toggleStrength(name) {
+      var idx = state.selectedStrengths.indexOf(name);
+      if (idx !== -1) {
+        state.selectedStrengths.splice(idx, 1);
+      } else if (state.selectedStrengths.length < 3) {
+        state.selectedStrengths.push(name);
+      }
+      
+      state.powers = state.selectedStrengths.map(function(str, i) {
+        return {
+          strength: str,
+          powerName: state.powers[i] ? state.powers[i].powerName : '',
+          reflection: state.powers[i] ? state.powers[i].reflection : ''
+        };
+      });
+      render();
+    }
+
+    // STEP 2: AVATAR
+    function renderStep2(container) {
+      var embHTML = EMBLEMS.map(function(e) {
+        return '<button onclick="setEmblem(\'' + e + '\')" class="btn" style="width:2.5rem; height:2.5rem; padding:0; font-size:1.25rem; background-color:' + (state.emblem === e ? '#2563eb' : '#1e293b') + ';">' + e + '</button>';
+      }).join('');
+
+      var colHTML = COLORS.map(function(c) {
+        return '<div onclick="setColor(\'' + c + '\')" class="color-swatch ' + (state.primaryColor === c ? 'active' : '') + '" style="background-color:' + c + ';"></div>';
+      }).join('');
+
+      container.innerHTML = 
+        '<div class="card-panel" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem;">' +
+          '<div class="avatar-preview">' +
+            '<div class="avatar-shield" style="background-color:' + state.primaryColor + ';">' +
+              state.emblem +
+            '</div>' +
+            '<div style="margin-top: 1rem; font-weight: bold; color: #60a5fa; font-family: monospace;">' + (state.heroAlias || 'UNNAMED HERO') + '</div>' +
+            '<div style="font-size: 0.75rem; color: #94a3b8;">' + state.archetype + '</div>' +
+          '</div>' +
+
+          '<div>' +
+            '<h2>2. Visual Avatar Studio</h2>' +
+            '<p class="desc">Customize your hero shield emblem and aura energy color.</p>' +
+
+            '<label>Hero Crest Symbol</label>' +
+            '<div style="display: flex; gap: 0.5rem; flex-wrap: wrap; margin-bottom: 1.25rem;">' + embHTML + '</div>' +
+
+            '<label>Power Energy Color</label>' +
+            '<div style="display: flex; gap: 0.5rem; margin-bottom: 1.5rem;">' + colHTML + '</div>' +
+
+            '<div class="btn-row">' +
+              '<button class="btn btn-secondary" onclick="prevStep()">← Back</button>' +
+              '<button class="btn btn-primary" style="width: 70%;" onclick="nextStep()">Power Dossier →</button>' +
+            '</div>' +
+          '</div>' +
+        '</div>';
+    }
+
+    function setEmblem(e) { state.emblem = e; render(); }
+    function setColor(c) { state.primaryColor = c; render(); }
+
+    // STEP 3: DOSSIER
+    function renderStep3(container) {
+      var isComplete = state.powers.length === 3 && state.powers.every(function(p) { return p.powerName.trim() && p.reflection.trim().length >= 8; });
+
+      var powHTML = state.powers.map(function(p, i) {
+        return '<div style="background-color: #020617; padding: 1rem; border-radius: 0.5rem; border: 1px solid #1e293b; margin-bottom: 1rem;">' +
+          '<div style="font-size: 0.75rem; color: #34d399; font-weight: bold; margin-bottom: 0.5rem;">POWER #' + (i+1) + ' STRENGTH: ' + p.strength + '</div>' +
+          '<div class="grid-2">' +
+            '<div>' +
+              '<label>Superhero Power Name</label>' +
+              '<input type="text" id="p-name-' + i + '" placeholder="e.g., Kinetic Shield" value="' + p.powerName + '" oninput="updatePowerName(' + i + ', this.value)">' +
+            '</div>' +
+            '<div>' +
+              '<label>Real Life Application (SA-2)</label>' +
+              '<textarea rows="2" placeholder="When did you use this strength at school?" oninput="updatePowerReflect(' + i + ', this.value)">' + p.reflection + '</textarea>' +
+            '</div>' +
+          '</div>' +
+        '</div>';
+      }).join('');
+
+      container.innerHTML = 
+        '<div class="card-panel">' +
+          '<h2>3. Power Origin Dossier</h2>' +
+          '<p class="desc">Match your strengths to powers and describe a real situation where you used them (SA-2).</p>' +
+          powHTML +
+          '<div class="btn-row">' +
+            '<button class="btn btn-secondary" onclick="prevStep()">← Back</button>' +
+            '<button class="btn ' + (isComplete ? 'btn-primary' : 'btn-disabled') + '" style="width: 70%;" ' + (isComplete ? 'onclick="nextStep()"' : 'disabled') + '>Generate Hero Card →</button>' +
+          '</div>' +
+        '</div>';
+    }
+
+    function updatePowerName(i, val) { state.powers[i].powerName = val; checkDossierValid(); }
+    function updatePowerReflect(i, val) { state.powers[i].reflection = val; checkDossierValid(); }
+    
+    function checkDossierValid() {
+      var isComplete = state.powers.length === 3 && state.powers.every(function(p) { return p.powerName.trim() && p.reflection.trim().length >= 8; });
+      var btns = document.querySelectorAll('.btn-row .btn');
+      if (btns && btns.length > 1) {
+        var btn = btns[1];
+        btn.className = 'btn ' + (isComplete ? 'btn-primary' : 'btn-disabled');
+        btn.disabled = !isComplete;
+      }
+    }
+
+    // STEP 4: CARD
+    function renderStep4(container) {
+      var powListHTML = state.powers.map(function(p) {
+        return '<div class="power-box">' +
+          '<div style="display: flex; justify-content: space-between; font-size: 0.75rem; font-weight: bold; color: #34d399;">' +
+            '<span>' + p.powerName + '</span>' +
+            '<span style="color: #64748b;">[' + p.strength + ']</span>' +
+          '</div>' +
+          '<div style="font-size: 0.75rem; color: #cbd5e1; font-style: italic; margin-top: 0.25rem;">"' + p.reflection + '"</div>' +
+        '</div>';
+      }).join('');
+
+      container.innerHTML = 
+        '<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">' +
+          '<div>' +
+            '<h2>Hero Card Complete!</h2>' +
+            '<p class="desc" style="margin:0;">Ready for gallery walk display.</p>' +
+          '</div>' +
+          '<button class="btn btn-primary" style="width: auto; padding: 0.5rem 1rem;" onclick="window.print()">🖨️ Print Card</button>' +
+        '</div>' +
+
+        '<div id="printable-card" class="trading-card">' +
+          '<div class="card-header">' +
+            '<div class="avatar-shield" style="width: 4rem; height: 4rem; font-size: 2rem; background-color: ' + state.primaryColor + '; border-radius: 0.5rem;">' +
+              state.emblem +
+            '</div>' +
+            '<div>' +
+              '<h3 style="font-size: 1.25rem; font-weight: 900; text-transform: uppercase;">' + state.heroAlias + '</h3>' +
+              '<div style="font-size: 0.75rem; color: #60a5fa; font-family: monospace;">' + state.archetype + '</div>' +
+            '</div>' +
+          '</div>' +
+
+          '<div>' + powListHTML + '</div>' +
+
+          '<div style="text-align: center; margin-top: 1rem; border-top: 1px solid #1e293b; padding-top: 0.5rem; font-size: 0.625rem; color: #64748b; font-family: monospace;">' +
+            'SA-2 SELF-AWARENESS STRENGTHS CARD' +
+          '</div>' +
+        '</div>' +
+
+        '<div style="text-align: center; margin-top: 1rem;">' +
+          '<button class="btn" style="background: none; color: #94a3b8; text-decoration: underline;" onclick="prevStep()">← Edit Powers</button>' +
+        '</div>';
+    }
+
+    function nextStep() { state.step = Math.min(state.step + 1, 4); render(); }
+    function prevStep() { state.step = Math.max(state.step - 1, 1); render(); }
+
+    // Safely launch render once DOM is fully loaded
+    window.onload = function() {
+      render();
+    };
+  </script>
+</body>
+</html>
